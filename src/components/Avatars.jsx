@@ -5,39 +5,56 @@ import axios from "axios";
 
 const Avatars = () => {
   const [badges, setBadges] = useState([]);
+  const [users, setUsers] = useState([]); // Added users state
   const [modalVisible, setModalVisible] = useState(false);
   const [form] = Form.useForm();
 
-  //  Fetch badges using Axios
- const fetchBadges = async () => {
-  try {
-    const res = await axios.get("/api/badges");
-    // If your backend returns { badges: [...] }, use this:
-    setBadges(res.data.badges);  
+  // Fetch badges
+  const fetchBadges = async () => {
+    try {
+      const res = await axios.get("/api/badges");
+      setBadges(res.data.badges); // adjust if your response is plain array
+    } catch (error) {
+      toast.error("Failed to load badges");
+    }
+  };
 
-    // If your backend returns plain array, then:
-    // setBadges(res.data);
-  } 
-  catch (error) {
-    toast.error("Failed to load badges");
+  // Fetch users to assign badges
+  const fetchUsers = async () => {
+  try {
+    const res = await axios.get("http://localhost:8080/api/blog-users/"); // Same as in Registered Users
+    const data = res.data;
+
+    // If your backend returns { users: [...] }
+    if (Array.isArray(data.users)) {
+      setUsers(data.users);
+    } else if (Array.isArray(data)) {
+      setUsers(data);
+    } else {
+      setUsers([]);
+      toast.error("Unexpected user data format");
+    }
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    toast.error("Failed to load users");
   }
 };
 
 
   useEffect(() => {
     fetchBadges();
+    fetchUsers(); // Load users when component mounts
   }, []);
 
-  // Submit new badge using Axios
+  // Submit new badge
   const onFinish = async (values) => {
     try {
-      await axios.post("/api/badges", values);
+      await axios.post("http://localhost:8080/api/badges", values);
       toast.success("Badge added successfully");
       setModalVisible(false);
       form.resetFields();
-      fetchBadges(); // refresh table
-    } 
-    catch (error) {
+      fetchBadges();
+    } catch (error) {
       toast.error("Failed to add badge");
     }
   };
@@ -57,6 +74,13 @@ const Avatars = () => {
       title: "Color",
       dataIndex: "color",
       key: "color",
+    },
+    {
+      title: "Assigned To",
+      dataIndex: "assignedTo",
+      key: "assignedTo",
+      render: (assignedTo) =>
+        assignedTo ? `${assignedTo.name} (${assignedTo.email})` : "Not Assigned",
     },
   ];
 
@@ -105,6 +129,20 @@ const Avatars = () => {
               <Select.Option value="green-400">Green</Select.Option>
               <Select.Option value="red-400">Red</Select.Option>
               <Select.Option value="purple-400">Purple</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Assign to User"
+            name="assignedTo"
+            rules={[{ required: true, message: "Please select a user" }]}
+          >
+            <Select placeholder="Choose a user">
+              {(users || []).map((user) => (
+                <Select.Option key={user._id} value={user._id}>
+                  {user.name} ({user.email})
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
 
