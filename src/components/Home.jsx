@@ -24,7 +24,7 @@ import BloggingUser from './BloggingUser';
 const Home = () => {
     const { Header, Sider, Content } = Layout;
     const [collapsed, setCollapsed] = useState(false);
-    const [path, setPath]=useState();
+      const [path, setPath] = useState('dashboard');
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -41,17 +41,22 @@ const HandleMenu =(items)=>{
    <Layout className=" h-screen" >
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="demo-logo-vertical "  />
+        <div className="text-white text-center py-4 text-md font-bold border-b border-gray-700">
+    Junior Creator
+    <div className="text-2xl font-normal">Admin Panel</div>
+  </div>
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={['dashboard']} // optional, sync menu highlight
+              selectedKeys={[path]}
           items={[
-            {
-              key: 'users',
-              // name:'users',
-              icon: <UserOutlined />,
-              label: 'Users',
-            },
+            // {
+            //   key: 'users',
+            //   // name:'users',
+            //   icon: <UserOutlined />,
+            //   label: 'Users',
+            // },
             {
               key: 'dashboard',
               // name:'students',
@@ -112,7 +117,7 @@ const HandleMenu =(items)=>{
           }}
         >
           {/* Content  */}
-          {path ==='users'? <User/> :null}
+          {/* {path ==='users'? <User/> :null} */}
           {path ==='dashboard'? <Dashboard/> :null}
           {path ==='quiz'? <Quizzes/> :null}
           {path ==='blogs'? <Blogs/> :null}

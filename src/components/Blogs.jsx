@@ -286,21 +286,21 @@ const Blogs = () => {
         </div>
       ),
     },
-    {
-      title: 'Likes',
-      dataIndex: 'likes',
-      key: 'likes',
-      width: '10%',
-    },
+    // {
+    //   title: 'Likes',
+    //   dataIndex: 'likes',
+    //   key: 'likes',
+    //   width: '10%',
+    // },
     {
       title: 'Status',
       key: 'likedStatus',
       width: '15%',
       render: (_, record) => (
         record.mostLiked ? (
-          <Tag color="gold">Featured</Tag>
+          <Tag color="gold">Liked</Tag>
         ) : (
-          <Tag color="default">Regular</Tag>
+          <Tag color="default">Unliked</Tag>
         )
       ),
     },
@@ -315,7 +315,7 @@ const Blogs = () => {
           loading={marking === record._id}
           onClick={() => markAsMostLiked(record._id)}
         >
-          {record.mostLiked ? 'Unfeature' : 'Feature'}
+          {record.mostLiked ? 'Mark as Unliked' : 'Mark as Most Liked'}
         </Button>
       ),
     },

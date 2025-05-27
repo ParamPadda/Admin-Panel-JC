@@ -77,9 +77,9 @@ const Quizzes = () => {
     },
   ];
 
- const handleDelete = async (id) => {
+const handleDelete = async (id) => {
   try {
-    const { data } = await axios.delete(`http://localhost:8080/api/quiz/${id}`);
+    const { data } = await axios.delete(`http://localhost:8080/api/quiz/delete/${id}`);
     if (data.success) {
       toast.success("Deleted successfully");
       fetchQuestions();
@@ -90,6 +90,7 @@ const Quizzes = () => {
     toast.error("Failed to delete");
   }
 };
+
 
 
   useEffect(() => {
